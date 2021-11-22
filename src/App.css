@@ -1,0 +1,86 @@
+.App {
+  text-align: center;
+  margin: 40px;
+}
+
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+}
+#wrapper {
+  margin-left:auto;
+  margin-right:auto;
+  width: 1500px;
+}
+ol, ul {
+  padding-left: 30px;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+.img {
+  width:34px; 
+  height:34px; 
+  border: 0;
+  background-size: 100%; /* To fill the dimensions of container (button), or */
+  background-size: 34px auto; /* to specify dimensions explicitly */
+}
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+.square:focus {
+  outline: none;
+  background-color:yellow
+}
+button:active{
+  background-color:green;
+}
+.square:visited{
+  background-color:aqua
+}
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info {
+  margin-left: 20px;
+}
+
+.gameboard{
+  width:55%;
+  margin-right:2%;
+  float: left;
+}
+.gameboard iframe{
+ width:100%;
+}
+.flagbutton {
+  width:42%;
+  float: left;
+}
+.clearfix{
+  clear:both
+}
