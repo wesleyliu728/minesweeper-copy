@@ -50,10 +50,13 @@ class Board extends React.Component{
     var curr = this.state.shown.slice();
     if(this.state.isFlagging){
       const flag = this.state.flag.slice()
-      flag[val] = !flag[val]
-      this.setState({
-        flag:flag,
-      })
+      if (this.state.shown[val] != true){
+        flag[val] = !flag[val]
+        this.setState({
+          flag:flag,
+        })
+      }
+
     } else{
       function recurse(props, val, arrived, state){
         if(arrived.has(val)){
@@ -148,6 +151,12 @@ class Board extends React.Component{
       )
       )
   }
+  generate_difficulty_button(xval, yval, bombcount){
+    return(
+    <button className="diff_button" onClick={() => {this.props.diff_change(xval, yval, bombcount);this.handleReset()}} style = {{background:'aqua'}}> 
+    </button>
+    )
+  }
   render(){
     return(
       <div>
@@ -155,7 +164,14 @@ class Board extends React.Component{
           {this.getbombs()}<img className = "img"src = {flagpng}/>
         </div>
         <div className = "gameboard">
+          <div>
+            {this.generate_difficulty_button(10,8,10)}
+            {this.generate_difficulty_button(18,14,40)}
+            {this.generate_difficulty_button(24,20,100)}
+          </div>
+          <div>
           {this.generateBoard(this.props.xval,this.props.yval)}
+          </div>
         </div>
         <div className = "flagbutton">
           {this.generate_flag_button()}
@@ -172,31 +188,42 @@ class Game extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      xval:this.props.xval,
-      yval:this.props.yval,
-      gameboard: this.generateRandomBoard(),
+      xval: 20,
+      yval:15,
+      bombs: 5,
+      gameboard: null,
       index:0
     };
   }
+
+  handle_difficulty_change(xval, yval, bombcount){
+    this.setState({
+      xval:xval,
+      yval:yval,
+      bombs:bombcount
+    })
+  }
+
+
   generateRandomBoard(){
-    var board = Array(this.props.xval*this.props.yval).fill(0)
-    var bombs = getRandomInt(this.props.minbomb, this.props.minbomb + Math.floor((this.props.xval*this.props.yval)/5))
+    var board = Array(this.state.xval*this.state.yval).fill(0)
+    var bombs = this.state.bombs
     while(bombs > 0){
-      const cRow = getRandomInt(0, this.props.xval)
-      const cCol = getRandomInt(0, this.props.yval)
-      const ind = cCol*this.props.xval + cRow
+      const cRow = getRandomInt(0, this.state.xval)
+      const cCol = getRandomInt(0, this.state.yval)
+      const ind = cCol*this.state.xval + cRow
       if(board[ind] !== '!!!'){
         board[ind] = '!!!'
         bombs -= 1;
       }
     }
-    for (var y = 0; y <= this.props.yval-1; y++){
-      for (var x = 0; x <= this.props.xval-1; x++){
-        if(board[y*this.props.xval + x] == '!!!'){
+    for (var y = 0; y <= this.state.yval-1; y++){
+      for (var x = 0; x <= this.state.xval-1; x++){
+        if(board[y*this.state.xval + x] == '!!!'){
           for (var i = x-1; i <= x+1; i++){
             for (var j = y-1; j <= y+1; j++){
-              if(j >= 0 && j<this.props.yval && i>= 0 && i< this.props.xval && board[j*this.props.xval + i] !=='!!!'){
-                board[j*this.props.xval + i] += 1
+              if(j >= 0 && j<this.state.yval && i>= 0 && i< this.state.xval && board[j*this.state.xval + i] !=='!!!'){
+                board[j*this.state.xval + i] += 1
               }
             }
           }
@@ -208,13 +235,19 @@ class Game extends React.Component{
 
   }
   renderBoard(){
+    this.generateRandomBoard()
     return(
-      <Board
-        xval = {this.state.xval}
-        yval = {this.state.yval}
-        board = {this.state.gameboard}
-        reset = {() => this.setState({gameboard:this.generateRandomBoard()})}
-      />
+      <div>
+        <div>
+          <Board
+            xval = {this.state.xval}
+            yval = {this.state.yval}
+            board = {this.generateRandomBoard()}
+            reset = {() => this.setState({gameboard:this.generateRandomBoard()})}
+            diff_change = {(x,y,z) => this.handle_difficulty_change(x,y,z)}
+          />
+        </div>
+      </div>
     );
   }
   render(){
@@ -224,6 +257,7 @@ class Game extends React.Component{
   }
 }
 function App() {
+
   return (
     <div id = "wrapper">
       <div className="App">
