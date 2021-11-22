@@ -82,6 +82,9 @@ class Board extends React.Component{
           }
         }
       }
+      if(this.state.flag[val]){
+        return
+      }
       if (this.props.board[val] == 0){
         recurse(this.props, val, new Set(), this.state)
       } else if(this.props.board[val] == '!!!'){
