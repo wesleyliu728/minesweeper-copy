@@ -25,7 +25,7 @@ class Board extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      board: this.props.gameboard,
+      board: this.props.g37F03Dameboard,
       shown: Array(this.props.xval * this.props.yval).fill(false),
       flag: Array(this.props.xval * this.props.yval).fill(false),
       isFlagging: false
@@ -33,9 +33,9 @@ class Board extends React.Component{
   }
   getBackground(value){
     if(this.state.shown[value]){
-      return 'yellow'
+      return '#24DF2A'
     } else{
-      return 'green'
+      return '#46BD39'
     
   }
   }
@@ -101,11 +101,9 @@ class Board extends React.Component{
     );
   }
   generate_flag_button(){
-    return (<Square
-      value = {<img className = "img"src = {flagpng}/>}
-      handleClick = {() => this.handleFlagging()}
-      getBackground = {() => {return 'purple'}}
-    />);
+    return (<button classname = "button-4" onClick = {() => this.handleFlagging()} style = {{marginTop: 4, marginBottom: 8, background: (!this.state.isFlagging ? "white":"#FC583F")}} >
+      {<img className = "img"src = {flagpng}/>}
+    </button>);
   }
   handleFlagging(){
     this.setState({
@@ -116,11 +114,10 @@ class Board extends React.Component{
     })
   }
   generate_reset_button(){
-    return (<Square
-      value = {'re'}
-      handleClick = {() => this.handleReset()}
-      getBackground = {() => {return 'blue'}}
-    />);
+    return (<button className="button-4" onClick = {() => this.handleReset()} style = {{background:"#FF8181", }}>
+      reset
+      </button>
+    );
   }
   handleReset(){
     this.setState({
@@ -129,11 +126,9 @@ class Board extends React.Component{
       flag: Array(this.props.xval * this.props.yval).fill(false),
       isFlagging: false
     })
-
   }
 
   getbombs(){
-    console.log(getOccurrence(this.props.board, '!!!'))
     return getOccurrence(this.props.board, '!!!') - getOccurrence(this.state.flag, true)
   }
   generateBoard(val1, val2){
@@ -154,9 +149,10 @@ class Board extends React.Component{
       )
       )
   }
-  generate_difficulty_button(xval, yval, bombcount){
+  generate_difficulty_button(xval, yval, bombcount,diffname){
     return(
-    <button className="diff_button" onClick={() => {this.props.diff_change(xval, yval, bombcount);this.handleReset()}} style = {{background:'aqua'}}> 
+    <button className="button-4" onClick={() => {this.props.diff_change(xval, yval, bombcount);this.handleReset()}} style = {{background:"#81FFFC",}}>
+      {diffname}
     </button>
     )
   }
@@ -164,21 +160,26 @@ class Board extends React.Component{
     return(
       <div>
         <div>
+        {this.generate_flag_button()}
+        </div>
+        <div>
           {this.getbombs()}<img className = "img"src = {flagpng}/>
+          
         </div>
-        <div className = "gameboard">
+        <div className = "gameboard" style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}> 
           <div>
-            {this.generate_difficulty_button(10,8,10)}
-            {this.generate_difficulty_button(18,14,40)}
-            {this.generate_difficulty_button(24,20,100)}
-          </div>
-          <div>
-          {this.generateBoard(this.props.xval,this.props.yval)}
+            {this.generateBoard(this.props.xval,this.props.yval)}
           </div>
         </div>
-        <div className = "flagbutton">
-          {this.generate_flag_button()}
+        <div style = {{marginTop: 8}}>
           {this.generate_reset_button()}
+          {this.generate_difficulty_button(10,8,10,"easy")}
+          {this.generate_difficulty_button(18,14,40,"medium")}
+          {this.generate_difficulty_button(24,20,100,"hard")}
         </div>
       
       </div>
@@ -193,7 +194,7 @@ class Game extends React.Component{
     this.state = {
       xval: 20,
       yval:15,
-      bombs: 5,
+      bombs: 40,
       gameboard: null,
       index:0
     };
@@ -233,7 +234,6 @@ class Game extends React.Component{
         }
       }
     }
-    console.log(board)
     return board
 
   }
@@ -262,7 +262,7 @@ class Game extends React.Component{
 function App() {
 
   return (
-    <div id = "wrapper">
+    <div className = "wrap">
       <div className="App">
         <Game
           xval = {20}
